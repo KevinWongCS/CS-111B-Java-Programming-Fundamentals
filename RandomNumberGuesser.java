@@ -1,34 +1,43 @@
-package cs111b;
+package NumberGuesser;
+
 import java.util.Random;
 
-public class RandomNumberGuesser extends NumberGuesser{
-	Random randGen = new Random();
-	//parameters
-	protected int N;
+public class RandomNumberGuesser extends NumberGuesser {
 	
+	private int randomValue;
+	private boolean randomValueNeedsUpdating;
+	private Random generator;
 	
-	// constructor
-	public RandomNumberGuesser(int lowerBound, int upperBound) {
-		super(lowerBound, upperBound);
+	public RandomNumberGuesser(int l, int h) {
+		super(l, h);
 		
+		randomValueNeedsUpdating = true;
+		generator = new Random();
 	}
-
-	// note: 
-	// overrides getCurrentGuess()
-	// inherits setLowerUpper()
-	// inherits higher()
-	// inherits lower()
 	
-	
-	@Override
 	public int getCurrentGuess() {
-		if (lowerupperexecution == true) {
-			N = upper - lower + 1;
-			currGuess = randGen.nextInt(N) + lower;
-			// resetting lower() and upper() execution tracker
-			lowerupperexecution = false;
-			return currGuess;
+		
+		if (randomValueNeedsUpdating) {
+			randomValue = low + (generator.nextInt((high - low) + 1));
+			randomValueNeedsUpdating = false;
 		}
-		return currGuess;
+		
+		return randomValue;
 	}
+	
+	public void higher() throws NumberGuesserIllegalStateException {
+		super.higher();
+		randomValueNeedsUpdating = true;
+	}
+	
+	public void lower() throws NumberGuesserIllegalStateException {
+		super.lower();
+		randomValueNeedsUpdating = true;
+	}
+	
+	public void reset() {
+		super.reset();
+		randomValueNeedsUpdating = true;
+	}
+	
 }

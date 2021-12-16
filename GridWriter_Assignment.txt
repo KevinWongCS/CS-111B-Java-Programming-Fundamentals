@@ -1,0 +1,102 @@
+kevin wong
+Assignment - GridWriter
+11/29/2021
+
+1. 	Examples of Polymorphism
+
+	MyCircle.getArea(), MyCircle.containsPoint(), MyRectangle.getArea(), MyRectangle.containsPoint()
+
+2. 	The containsPoint method x and y are in scope because the superclass GridItem declared x and y 
+	as protected variables, so subclasses have access to them or inherits them.
+
+3. 	The GridItem's containsPoint method is never called because of runtime polymorphism. The 
+	MyCircle and MyRectangle class's both have containsPoint methods that override the parent class's.
+	
+4. 	The compiler throws errors saying GridItem.x and .y are not visible. Private variables are only
+	visible in its own class so an error was expected. 
+	
+5.	How could Abstract Methods have been used to make the code cleaner? 
+
+	Since GridItem's containsPoint() and getArea() wasn't used directly, the methods probably could 
+	have been set to abstract. The methods from parent class GridItem can then be implemented or overriden 
+	in the subclass. The setters and getters for x and y also weren't used since those fields
+	are protected in the program, so I would probably ommit them to clean up GridItem. Could look like:
+	
+		public abstract class GridItem {
+			protected int x;
+			protected int y;
+			
+			public abstract double getArea(){
+				return 0;
+			}
+			
+			public abstract double containsPoint(int x, int y){
+				return 0;
+			}
+		
+		}
+	
+	The GridWriter.add() and GridWriter.doubleItemCapacity() can also be implemented through an abstract 
+	class because the code looks pretty complicated. An arrayMethods abstract Class that contains 
+	the array paramters and methods would make the GridWriter code look cleaner. The subclass GridWriter 
+	would then just inherit the methods from the abstract class. The abstract class could look like:
+	
+		public abstract arrayMethods {
+		
+			protected GridItem items[];
+			protected int size;
+			protected static final int INITIAL_CAPACITY = 4;
+			
+			items = new GridItem[INITIAL_CAPACITY];  
+			size = 0;
+		
+			public void add(GridItem item) {
+				
+				// If the item array is full, we double its capacity
+				if (size == items.length) {
+					doubleItemCapacity();
+				}
+				
+				// Store the item GridItem in the items array
+				items[size] = item;
+				
+				// Increment size. Size counts the number of items 
+				// currently stored in the GridWriter. 
+				size++;
+			}
+			
+			private void doubleItemCapacity() {
+			
+				// allocate a new array with double capacity
+				GridItem temp[] = new GridItem[items.length * 2];
+				
+				// Copy by hand, so to speak
+				for (int i = 0; i < items.length; i++) {
+					temp[i] = items[i];
+				}
+				
+				// point the items array at the temp array. 
+				// The old array will be garbage collected
+				items = temp;
+			}
+		}
+
+6. 	How might an Interface have been used to structure the classes?
+
+	The getArea and containsPoint methods seems to be implemented for all GridItems, so I would create
+	interface GridItems with double getArea and boolean containsPoint to assure there implementation. The
+	methods getArea and containsPoint don't need to be overloaded since getArea doesn't take any arguments
+	and containsPoint will always have 2 int coordinates for a 2d grid.
+	
+		public interface GridItems {
+			public double getArea();
+			public boolean containsPoint(int x, int y);
+		}
+	
+	All the array methods in GridWriter can also be abstracted into an arrayMethods interface.
+		
+		public interface arrayMethods {
+			public void add();
+			public void doubleItemCapacity();
+		}
+	

@@ -1,53 +1,49 @@
-package cs111b;
+package NumberGuesser;
 
-public class NumberGuesser {
-	// how this class is meant to be used:
-	// Guesses an integer for a given range by finding the midpoint
-	// between the range, if the guess is incorrect the range is
-	// updated and the loop continues
-	protected int lower;
-	protected int upper;
-	protected int currGuess;
-	protected boolean lowerupperexecution = true;
+
+public class NumberGuesser extends NumberGuesserIllegalStateException{
 	
-	// constructor
-	public NumberGuesser(int lowerBound, int upperBound) {
-		this.lower = lowerBound;
-		this.upper = upperBound;
+	protected int high;
+	protected int low;
+	
+	private int originalHigh;
+	private int originalLow;
+	
+	public NumberGuesser (int l, int h) {
+		super("You are cheating");
+		low = originalLow = l;
+		high = originalHigh = h;
 	}
 	
-	// set parameters
-	// I used this to reset the game instead of the reset() method
-	public void setLowerUpper(int lower, int upper) {
-		this.lower = lower;
-		this.upper = upper;
-		lowerupperexecution = true;
-	}
-	
-	// returns the current guess
 	public int getCurrentGuess() {
-		currGuess = ((upper + lower) / 2);
-		if ((upper - currGuess) == 1) {
-			upper += 1;
+		return (high + low) / 2;
+	}
+	
+	public void higher() throws NumberGuesserIllegalStateException {
+		low = getCurrentGuess() + 1;
+		// TESTING
+//		System.out.println("high: " + high);
+//		System.out.println("low: " + low);
+		
+		
+		if (high < low) {
+			throw new NumberGuesserIllegalStateException("You are cheating");
 		}
-		return currGuess;
 	}
 	
-	// if user's guess is higher that current guess
-	public void higher() {
-		lower = currGuess;
-		lowerupperexecution = true;
+	public void lower() throws NumberGuesserIllegalStateException {
+		high = getCurrentGuess() - 1;
+		// TESTING
+//		System.out.println("high: " + high);
+//		System.out.println("low: " + low);
+		
+		if (high < low) {
+			throw new NumberGuesserIllegalStateException("You are cheating");
+		}
 	}
 	
-	// if user's guess is lower than current guess
-	public void lower() {
-		upper = currGuess;
-		lowerupperexecution = true;
-	}
-	
-	// reset parameters for next game
 	public void reset() {
-		upper = 100;
-		lower = 0;
+		low = originalLow;
+		high = originalHigh;
 	}
 }
